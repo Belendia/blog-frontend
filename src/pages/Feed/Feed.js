@@ -22,7 +22,11 @@ class Feed extends Component {
   };
 
   componentDidMount() {
-    fetch("URL")
+    fetch("http://localhost:8080/auth/status", {
+      headers: {
+        Authorization: "Bearer " + this.props.token,
+      },
+    })
       .then((res) => {
         if (res.status !== 200) {
           throw new Error("Failed to fetch user status.");
@@ -78,7 +82,16 @@ class Feed extends Component {
 
   statusUpdateHandler = (event) => {
     event.preventDefault();
-    fetch("URL")
+    const formData = new FormData();
+    formData.append("status", this.state.status);
+
+    fetch("http://localhost:8080/auth/status", {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + this.props.token,
+      },
+      body: formData,
+    })
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
           throw new Error("Can't update status!");
